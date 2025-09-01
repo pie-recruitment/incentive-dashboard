@@ -1,5 +1,5 @@
 import React from "react";
-import IncentiveDashboard from "./IncentiveDashboard.jsx";
-export default function App() {
-  return <IncentiveDashboard />;
-}
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+
+createRoot(document.getElementById("root")).render(<App />);
