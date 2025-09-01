@@ -253,4 +253,121 @@ export default function MultiIncentiveDashboard() {
           )}
         </header>
 
-        <div className="bg-white rounded-2xl shado
+        <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+          <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
+            <Target className="w-5 h-5" /> Add a new incentive
+          </h2>
+          <div className="grid sm:grid-cols-[1fr_160px_auto] gap-3">
+            <input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="Name e.g. Q4 Sales"
+              className="rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6341]"
+            />
+            <input
+              value={newTarget}
+              onChange={(e) => setNewTarget(e.target.value)}
+              type="number"
+              inputMode="numeric"
+              placeholder="Target e.g. 40"
+              className="rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6341]"
+            />
+            <button
+              onClick={handleAddIncentive}
+              className="rounded-xl bg-[#FF6341] text-white px-4 py-3 inline-flex items-center justify-center gap-2 hover:opacity-90"
+            >
+              <PlusCircle className="w-5 h-5" /> Add incentive
+            </button>
+          </div>
+          {demoMode && (
+            <p className="text-xs text-gray-500 mt-2">
+              Demo mode uses your browser storage. Add your Supabase keys to go live.
+            </p>
+          )}
+        </div>
+
+        {loading ? (
+          <div className="py-24 grid place-items-center">
+            <div className="animate-spin w-12 h-12 rounded-full border-4 border-gray-200 border-t-[#FF6341]" />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {incentives.map((inc) => {
+              const total = totals[inc.id] || 0;
+              const pct = inc.target > 0 ? Math.min(total / inc.target, 1) : 0;
+              const over = total > inc.target;
+              return (
+                <div key={inc.id} className="bg-white rounded-2xl shadow-sm p-6 flex flex-col">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-9 h-9 rounded-xl bg-[#FF6341]/10 grid place-items-center">
+                      <Users className="w-4 h-4 text-[#FF6341]" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold truncate" title={inc.name}>
+                        {inc.name}
+                      </h3>
+                      <div className="text-xs text-gray-500">Target {fmt(inc.target)}</div>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 grid place-items-center">
+                    <Donut percent={pct} />
+                  </div>
+
+                  <div className="mt-4 text-center">
+                    <div className="text-xl font-semibold">
+                      {fmt(total)} / {fmt(inc.target)}
+                      {over ? " (🎉 exceeded)" : ""}
+                    </div>
+                    <div className="text-xs text-gray-500">{fmt(Math.max(inc.target - total, 0))} remaining</div>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-[1fr] sm:grid-cols-[1fr_auto] gap-3">
+                    <input
+                      type="number"
+                      inputMode="numeric"
+                      placeholder="Add amount"
+                      value={amountById[inc.id] || ""}
+                      onChange={(e) => setAmountById((m) => ({ ...m, [inc.id]: e.target.value }))}
+                      className="rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6341]"
+                    />
+                    <button
+                      onClick={() => handleAddContribution(inc)}
+                      className="rounded-xl bg-[#FF6341] text-white px-4 py-3 inline-flex items-center justify-center gap-2 hover:opacity-90"
+                    >
+                      <PlusCircle className="w-5 h-5" /> Add
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Optional note (who/what)"
+                    value={noteById[inc.id] || ""}
+                    onChange={(e) => setNoteById((m) => ({ ...m, [inc.id]: e.target.value }))}
+                    className="mt-2 rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#FF6341]"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              className="mt-6 rounded-xl bg-red-50 text-red-700 px-4 py-3 text-sm"
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <footer className="mt-10 text-xs text-gray-500 text-center">
+          Built for PIE — brand accents #FF6341 / #232D34
+        </footer>
+      </div>
+    </div>
+  );
+}
