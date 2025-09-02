@@ -183,11 +183,17 @@ export default function MultiIncentiveDashboard() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#f7f7f8", padding: 24, color: "#232D34" }}>
-      <header style={{ textAlign: "center", marginBottom: 24 }}>
-        <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>
-          PIE Recruitment September Incentive Tracker
-        </h1>
-      </header>
+<header style={{ textAlign: "center", marginBottom: 24 }}>
+  <img
+    src="/logo.png"
+    alt="PIE Recruitment Logo"
+    style={{ height: 60, marginBottom: 12, objectFit: "contain" }}
+  />
+  <h1 style={{ margin: 0, fontSize: 24, fontWeight: 700 }}>
+    PIE Recruitment September Incentive Tracker
+  </h1>
+</header>
+
 
       {/* Summary pies */}
       <section
